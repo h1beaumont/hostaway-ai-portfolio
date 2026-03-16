@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Harry Beaumont — Internal AI Tools Specialist | Hostaway</title>
+<meta name="description" content="Harry Beaumont — Hostaway power user, API integrator, and builder of production AI systems. 5-agent automation stack, 600+ endpoints, dynamic pricing engine connected to Hostaway API. Applying for Internal AI Tools Specialist." />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { min-height: 100vh; background: #FAFAF8; font-family: 'Georgia', 'Times New Roman', serif; color: #1a1a1a; -webkit-font-smoothing: antialiased; }
+  nav::-webkit-scrollbar { display: none; }
+  a { color: inherit; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+// ─── Brand ──────────────────────────────────────────────────────────────────
+// Hostaway purple accent
+const ACCENT = "#5C4AE8";
+const ACCENT_LIGHT = "#EEF0FD";
+const ACCENT_MID = "#8B7FF0";
+
+// ─── Data ───────────────────────────────────────────────────────────────────
+
+const STATS = [
+  { label: "Active Properties via Hostaway", value: 68, suffix: "" },
+  { label: "API Endpoints Built", value: 600, suffix: "+" },
+  { label: "Automation Scripts", value: 85, suffix: "+" },
+  { label: "Years Shipping AI Systems", value: 7, suffix: "+" },
+];
+
+const NAV_SECTIONS = [
+  { id: "timeline", label: "Timeline" },
+  { id: "architecture", label: "Architecture" },
+  { id: "agents", label: "AI Agents" },
+  { id: "tools", label: "Tools" },
+  { id: "hostaway", label: "Hostaway" },
+  { id: "ai-practice", label: "AI Practice" },
+  { id: "lessons", label: "Lessons" },
+  { id: "why-hostaway", label: "Why Hostaway" },
+];
+
+const INTEGRATIONS = [
+  { name: "Hostaway API", category: "core" },
+  { name: "Claude API", category: "ai" },
+  { name: "ElevenLabs", category: "ai" },
+  { name: "Airbnb", category: "platform" },
+  { name: "Booking.com", category: "platform" },
+  { name: "Stripe", category: "payments" },
+  { name: "Telleroo", category: "payments" },
+  { name: "Tide", category: "payments" },
+  { name: "Deliveroo", category: "platform" },
+  { name: "Signable", category: "ops" },
+  { name: "Cloudinary", category: "ops" },
+  { name: "JustCall", category: "ops" },
+  { name: "Google Sheets", category: "ops" },
+  { name: "WhatsApp", category: "comms" },
+  { name: "Slack API", category: "comms" },
+  { name: "Cloudflare Workers", category: "infra" },
+  { name: "Vercel", category: "infra" },
+  { name: "Replit", category: "infra" },
+  { name: "Tailscale", category: "infra" },
+  { name: "GitHub", category: "infra" },
+];
+
+const INTEGRATION_COLORS = {
+  core: { bg: ACCENT_LIGHT, color: ACCENT },
+  ai: { bg: "#f0e8ff", color: "#6b3fa0" },
+  platform: { bg: "#e8f4f0", color: "#2d6a4f" },
+  payments: { bg: "#fff3e0", color: "#a0622d" },
+  ops: { bg: "#e8f0f8", color: "#3a5a8c" },
+  comms: { bg: "#fce8ee", color: "#8c3a5a" },
+  infra: { bg: "#f0f0f0", color: "#555555" },
+};
+
+const TIMELINE = [
+  { year: "2013–2017", title: "BSc Real Estate (Hons) — Nottingham Trent University", detail: "RICS-accredited degree. Placement year at Salloway Property Consultants covering valuations, agency, and development appraisals across the East Midlands.", type: "education" },
+  { year: "2017–2018", title: "MSc International Real Estate Investment & Finance (Incomplete) — NTU", detail: "Began advanced studies in real estate finance and investment analysis before leaving to build Comfort Short Stays full-time.", type: "education" },
+  { year: "2017–2019", title: "Founded HBS Apartments / Comfort Short Stays", detail: "Started with 15 units. Scaled to 150+ properties at peak, £450k revenue in a single month. Began using off-the-shelf PMS tools and quickly found their limits — seeding the decision to build my own systems.", type: "founded" },
+  { year: "2019–2020", title: "Co-founded Urbanosa Ltd", detail: "Linen hire and laundry logistics business servicing 70+ short-stay apartments. Built the operational playbook for turnaround logistics at scale.", type: "founded" },
+  { year: "2020–Present", title: "Founded Wrenstone Stays Ltd / Key Stays", detail: "Rebuilt from the ground up. Currently managing 60–70+ properties via Hostaway, Airbnb & Booking.com. Built the entire internal AI tools stack from scratch — 5-agent automation system, dynamic pricing engine connected to the Hostaway API, ops dashboard, AI guest comms running in production.", type: "founded" },
+  { year: "2023–Present", title: "Deep Hostaway API Integration", detail: "Moved from Uplisting to Hostaway. Became a power user and then an API integrator — built a custom dynamic pricing engine that pushes rates to 68 live listings via the Hostaway API every day at 6am. Communications Agent pulls reservation context from Hostaway in real time. Found and reported product bugs. Regularly submitted feature requests and given direct product feedback.", type: "hostaway" },
+  { year: "2024–Present", title: "Founded Midlands Digital AI", detail: "AI automation consultancy helping East Midlands SMEs implement practical AI solutions. Packaging the same internal AI tooling approach — agents, workflows, dashboards — for other businesses.", type: "founded" },
+];
+
+const AGENTS = [
+  { title: "Communications Agent", size: "2.7MB · 31 scripts", summary: "The brain of guest operations. 22-intent classification, Claude API auto-drafting, self-learning loop.", detail: "22-intent classification system with deterministic playbook routing — every guest message is classified, a response is auto-drafted via the Claude API, and the system either auto-sends or queues for human review. Pulls live reservation context from Hostaway API. Includes guest intelligence (mood tracking, satisfaction scoring, review risk prediction), Stripe deposit collection with automated chase sequences, proactive upsell triggers, concierge services, and a self-improving learning system that tracks which responses get edited and why — feeding that back into prompts over time.", tags: ["Claude API", "Hostaway API", "Stripe", "22 Intents", "Self-Learning"] },
+  { title: "Finance Agent", size: "115K chars", summary: "Complete financial controller across 7 domains. Deposits to VAT compliance.", detail: "Covers guest finances (deposits, damage charges, invoicing), owner finances (statements, commission at 12.5% + VAT, payouts), contractor payments via Telleroo, platform reconciliation (Airbnb/Booking.com/Stripe), bank reconciliation with Tide statement import, cash flow forecasting (30/60/90 days), and VAT compliance. Includes revenue leakage detection, duplicate payment detection, and automated discrepancy investigation.", tags: ["Telleroo API", "Stripe", "Tide", "7 Domains", "Cash Flow"] },
+  { title: "Onboarding Agent", size: "2MB · 19 scripts", summary: "11-stage property pipeline from enquiry to live listing. Contractor dispatch, e-signatures, compliance.", detail: "11-stage property onboarding pipeline automating the entire journey from initial enquiry to live listing on Hostaway. Manages contractor dispatch (photographers, cleaners, plumbers, electricians), Signable e-signature integration for contracts, Cloudinary image management, gas safety & EICR compliance tracking, stuck property alerts, and a 459K-char Operations Master file orchestrating the whole flow.", tags: ["11-Stage Pipeline", "Signable API", "Cloudinary", "Hostaway", "Compliance"] },
+  { title: "Maintenance Agent", size: "16 scripts", summary: "Full maintenance lifecycle. Auto-triage, contractor dispatch, chase sequences, learning.", detail: "Automatic issue detection and triage by category (plumbing, electrical, appliances, locksmith, etc.), contractor dispatch with cascading team alerts, chase sequences for unresponsive contractors, completion tracking, WhatsApp integration for real-time updates, and a learning system that improves triage accuracy over time.", tags: ["WhatsApp", "Issue Triage", "Dispatch", "Chase", "Learning"] },
+  { title: "Voice Agent API", size: "8 scripts", summary: "ElevenLabs voice backend with security controls. Real-time reservation context delivery.", detail: "Backend for ElevenLabs voice agents handling guest phone calls. Provides real-time reservation context, listing details, and access codes by querying Hostaway API — with hard security controls that make it physically impossible to leak access codes to unpaid guests. Also handles email triage across multiple inboxes with template-based routing.", tags: ["ElevenLabs", "Hostaway API", "Voice AI", "Security Controls"] },
+];
+
+const TOOLS = [
+  { title: "KeyStays Ops Dashboard", url: "https://ops.keystays.uk", description: "Next.js operations dashboard (221 commits, 216 deployments). Real-time visibility across 8 operational queues: draft responses, escalations, complaints, unpaid deposits, fulfillment orders, pending extensions, cleanliness issues, and maintenance requests. Every action syncs back to Google Sheets as the source of truth. Built to replace Hostaway's native view for operators who need custom workflow management on top of the PMS data layer.", tags: ["Next.js", "221 Commits", "8 Queues", "Vercel", "Hostaway Data Layer"], activity: "221 commits · Live in production" },
+  { title: "Dynamic Pricing Engine", url: "https://pricing.keystays.co.uk", description: "Flask-based pricing engine connected to the Hostaway API managing rates across 68 live properties. Real-time financials, local event-based pricing boosts, competitor rate monitoring, per-property overrides, and automated daily rate pushes at 6am. Directly interacts with Hostaway's rate management endpoints every single day.", tags: ["Python/Flask", "Hostaway API", "68 Properties", "Revenue Management", "Daily Rate Push"] },
+  { title: "Guest Feedback Kiosk App", description: "Branded tablet kiosk for in-property guest feedback. React-based with star ratings across 6 categories, auto-reset between guests, and Google Sheets webhook integration. Deployed on Amazon Fire tablets in kiosk mode across the portfolio.", tags: ["React", "Google Sheets API", "IoT/Tablets"] },
+  { title: "Custom Platform & Infrastructure", description: "Bespoke platform with 600+ API endpoints handling the full operational lifecycle. Cloudflare Workers for edge logic, headless Mac Mini M4 with Tailscale running scraping and automation tasks, and automated owner statement generation with revenue breakdowns, fee reconciliation, and maintenance deductions.", tags: ["600+ Endpoints", "Cloudflare Workers", "Mac Mini M4", "Tailscale"] },
+];
+
+const HOSTAWAY_DEPTH = [
+  { title: "Daily API Integrator", detail: "The Hostaway API is called every day by my systems — rate pushes from the pricing engine, reservation context requests from the Communications Agent, property data for the Onboarding Agent. I've navigated the API docs, hit rate limits, handled webhook failures, and built retry logic. This isn't theoretical API knowledge." },
+  { title: "68 Live Listings, Real Money", detail: "Currently managing 68 properties directly through Hostaway. Every booking, every guest message, every payout flows through the platform. I've built on top of it, around it, and sometimes worked around its gaps — which means I understand both its strengths and the operator pain points that your internal tools team could address." },
+  { title: "Bug Reports & Product Feedback", detail: "Switched to Hostaway from Uplisting after finding a critical cleaning fee calculation bug there. Since moving, I've submitted bug reports and feature requests to Hostaway directly. I know what's in the product, what's missing, and what operators are asking for — because I'm one of them." },
+  { title: "Operator-to-Product Bridge", detail: "The gap between what a PMS offers and what an operator actually needs is where I've been building for three years. I've seen what internal tooling could do for Hostaway teams — better triage, AI-assisted workflows, automated QA on listing data, intelligent escalation routing. I've built versions of all of these for myself." },
+];
+
+const AI_PRACTICE = [
+  { title: "Production AI — Not Demos", detail: "The Communications Agent runs in production every day. It handles real guest messages, processes real payments, and makes real decisions. I've learned the hard way what breaks when you put AI into a real operational loop — and how to build guardrails that prevent it from breaking in ways that cost money or trust." },
+  { title: "Building Internal AI Tools Is What I Do", detail: "Key Stays is a one-person-operated business running on AI tools I built myself. The 5-agent system, the ops dashboard, the pricing engine, the voice agent backend — these are all internal tools, built to replace manual processes and give me leverage. That's exactly the brief for this role." },
+  { title: "Deterministic + Generative Hybrid Architecture", detail: "My best AI systems use a deterministic routing layer (rule-based, predictable, auditable) on top of which I sit a generative layer (Claude, context-aware, flexible). The 22-intent classification system in the Communications Agent is the clearest example — reliable outcomes with AI-quality responses." },
+  { title: "Self-Learning Infrastructure", detail: "Built explicit feedback mechanisms into the Communications Agent that track which drafted responses get edited before sending, what patterns those edits follow, and feed that back into system prompts over time. The system gets measurably better as it runs. This kind of feedback loop design is something I'd bring to Hostaway's internal tools." },
+  { title: "AI Consultancy Applied", detail: "Through Midlands Digital AI I've packaged the same approach for other businesses — identifying the highest-ROI processes to automate, building lightweight agent workflows, and handing over tools that non-technical operators can actually use. Understanding what works in the real world outside of a developer context matters for internal tooling." },
+];
+
+const LESSONS = [
+  { title: "Deterministic routing before generative responses", detail: "Early on I let Claude handle everything end-to-end. Impressive but unpredictable. The breakthrough was building a deterministic 22-intent classification layer first, then using Claude for response generation within guardrails. Reliability went up dramatically — and internal users trusted the output." },
+  { title: "Human-in-the-loop is a design decision, not a safety net", detail: "My system auto-sends routine responses but queues anything involving money, complaints, or access codes for human review. The line isn't 'AI vs. human' — it's knowing which decisions have reversible consequences and which don't. Internal tools need the same thinking." },
+  { title: "Context management matters more than prompt cleverness", detail: "The hardest engineering problem wasn't writing good prompts — it was getting the right context to the model at the right time. Reservation details, guest history, property-specific quirks, previous messages. Context quality determines output quality. This matters even more in internal tools where the data is richer and messier." },
+  { title: "Build around the workflow, not the model", detail: "Every failed automation started with 'what can the AI do?' Every successful one started with 'what does this workflow actually look like?' The best internal AI tools are built around real operational processes, not around model capabilities. I've learned to start with a process map before writing a single prompt." },
+  { title: "Adoption requires trust — trust requires explainability", detail: "The tools I built for myself had high adoption (100% — it's just me) but through the AI consultancy I've learned that internal tools live or die on whether the people using them trust what the AI is doing. Building in visibility — showing your work, making reasoning transparent — is as important as the underlying capability." },
+];
+
+// ─── Hooks & Components ─────────────────────────────────────────────────────
+
+function useCounter(target, duration = 2000, start = false) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!start) return;
+    let startTime = null;
+    const step = (ts) => {
+      if (!startTime) startTime = ts;
+      const p = Math.min((ts - startTime) / duration, 1);
+      setCount(Math.floor(p * target));
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [target, duration, start]);
+  return count;
+}
+
+function Reveal({ children, delay = 0 }) {
+  const ref = useRef(null);
+  const [v, setV] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setV(true); obs.disconnect(); } }, { threshold: 0.1 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return <div ref={ref} style={{ opacity: v ? 1 : 0, transform: v ? "translateY(0)" : "translateY(20px)", transition: `all 0.6s ease ${delay}s` }}>{children}</div>;
+}
+
+function StatCard({ stat, index, inView }) {
+  const count = useCounter(stat.value, 1800, inView);
+  return (
+    <div style={{ textAlign: "center", padding: "20px 12px", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(15px)", transition: `all 0.5s ease ${0.1 * index}s` }}>
+      <div style={{ fontSize: "clamp(28px, 4vw, 40px)", fontWeight: 300, color: ACCENT, letterSpacing: "-1px", fontFamily: "'Georgia', serif" }}>
+        {stat.prefix || ""}{count}{stat.suffix || ""}
+      </div>
+      <div style={{ fontSize: 12, fontFamily: "system-ui, sans-serif", textTransform: "uppercase", letterSpacing: "1.5px", color: "#9b9389", marginTop: 6 }}>
+        {stat.label}
+      </div>
+    </div>
+  );
+}
+
+function ExpandableCard({ item, defaultOpen = false, accentColor = null }) {
+  const [expanded, setExpanded] = useState(defaultOpen);
+  const isClickable = !!item.url;
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        padding: "24px 28px",
+        background: hovered ? "#FFFFFF" : "#FEFDFB",
+        border: `1px solid ${hovered ? (accentColor ? accentColor + "44" : "#d4c9b8") : "#ece9e3"}`,
+        borderRadius: 8,
+        transition: "all 0.25s ease",
+        boxShadow: hovered ? "0 2px 12px rgba(0,0,0,0.04)" : "none",
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: expanded ? 10 : 0 }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: item.summary ? 6 : 0, flexWrap: "wrap" }}>
+            <h3 style={{ fontSize: "clamp(16px, 2vw, 19px)", fontWeight: 400, margin: 0, color: "#1a1a1a" }}>
+              {item.title}
+            </h3>
+            {item.size && <span style={{ fontSize: 11, fontFamily: "system-ui, sans-serif", padding: "2px 8px", background: "#f3f0eb", color: "#8b7355", borderRadius: 3 }}>{item.size}</span>}
+          </div>
+          {item.summary && !expanded && (
+            <p style={{ fontSize: "clamp(13px, 1.8vw, 14px)", color: "#8a8580", margin: 0, lineHeight: 1.5 }}>{item.summary}</p>
+          )}
+          {item.activity && (
+            <div style={{ fontSize: 11, fontFamily: "system-ui, sans-serif", color: "#2d6a4f", marginTop: 4, display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#2d6a4f", display: "inline-block" }} />
+              {item.activity}
+            </div>
+          )}
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0, marginTop: 4 }}>
+          {isClickable && (
+            <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, fontFamily: "system-ui, sans-serif", color: accentColor || "#8b7355", textDecoration: "none", opacity: hovered ? 1 : 0.5, transition: "opacity 0.2s" }} onClick={(e) => e.stopPropagation()}>
+              Visit ↗
+            </a>
+          )}
+          {(item.detail || item.description) && (
+            <button
+              onClick={() => setExpanded(!expanded)}
+              style={{ background: "none", border: `1px solid ${accentColor ? accentColor + "44" : "#e0ddd8"}`, borderRadius: 4, padding: "3px 10px", cursor: "pointer", fontSize: 11, fontFamily: "system-ui, sans-serif", color: accentColor || "#8b7355", transition: "all 0.2s" }}
+            >
+              {expanded ? "Less" : "More"}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {expanded && (
+        <div style={{ overflow: "hidden" }}>
+          <p style={{ fontSize: "clamp(13px, 1.8vw, 15px)", lineHeight: 1.65, color: "#5a5550", margin: "8px 0 14px" }}>
+            {item.detail || item.description}
+          </p>
+          {item.tags && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+              {item.tags.map((tag, i) => (
+                <span key={i} style={{ fontSize: 11, fontFamily: "system-ui, sans-serif", padding: "3px 10px", background: tag.includes("Hostaway") ? ACCENT_LIGHT : "#f3f0eb", color: tag.includes("Hostaway") ? ACCENT : "#7a7269", borderRadius: 4, letterSpacing: "0.3px", fontWeight: tag.includes("Hostaway") ? 600 : 400 }}>{tag}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SectionHeading({ id, children, accent = false }) {
+  return (
+    <h2 id={id} style={{ fontSize: 13, fontFamily: "system-ui, sans-serif", textTransform: "uppercase", letterSpacing: "2.5px", color: accent ? ACCENT : "#9b9389", fontWeight: 500, margin: "0 0 24px", paddingBottom: 12, borderBottom: `1px solid ${accent ? ACCENT + "33" : "#e8e5e0"}`, scrollMarginTop: 60 }}>
+      {children}
+    </h2>
+  );
+}
+
+// ─── Architecture Diagram ───────────────────────────────────────────────────
+
+function ArchitectureDiagram() {
+  const agents = [
+    { label: "Comms\nAgent", x: 80, y: 90, w: 80, h: 50, color: "#6b3fa0" },
+    { label: "Finance\nAgent", x: 210, y: 90, w: 80, h: 50, color: "#a0622d" },
+    { label: "Onboard\nAgent", x: 340, y: 90, w: 80, h: 50, color: "#2d6a4f" },
+    { label: "Maint.\nAgent", x: 470, y: 90, w: 80, h: 50, color: "#8c3a5a" },
+    { label: "Voice\nAgent", x: 600, y: 90, w: 80, h: 50, color: ACCENT },
+  ];
+
+  const externalTop = [
+    { label: "Claude API", x: 80, y: 10, color: "#6b3fa0" },
+    { label: "Hostaway", x: 210, y: 10, color: ACCENT },
+    { label: "Stripe", x: 340, y: 10, color: "#a0622d" },
+    { label: "ElevenLabs", x: 470, y: 10, color: "#3a5a8c" },
+    { label: "WhatsApp", x: 600, y: 10, color: "#8c3a5a" },
+  ];
+
+  const bottom = [
+    { label: "Ops Dashboard", x: 120, y: 195, color: "#555" },
+    { label: "Pricing Engine", x: 300, y: 195, color: ACCENT },
+    { label: "Google Sheets\n(Source of Truth)", x: 480, y: 195, color: "#555" },
+  ];
+
+  return (
+    <div style={{ overflowX: "auto", padding: "0 0 8px" }}>
+      <svg viewBox="0 0 760 240" style={{ width: "100%", maxWidth: 760, minWidth: 500, height: "auto", display: "block", margin: "0 auto" }}>
+        {externalTop.map((ext, i) => (
+          <line key={`t${i}`} x1={ext.x + 40} y1={30} x2={agents[i].x + 40} y2={agents[i].y} stroke="#ddd8d0" strokeWidth={1} strokeDasharray="4,3" />
+        ))}
+
+        <line x1={120} y1={140} x2={160} y2={195} stroke="#ddd8d0" strokeWidth={1} strokeDasharray="4,3" />
+        <line x1={250} y1={140} x2={160} y2={195} stroke="#ddd8d0" strokeWidth={1} strokeDasharray="4,3" />
+        <line x1={380} y1={140} x2={340} y2={195} stroke="#ddd8d0" strokeWidth={1} strokeDasharray="4,3" />
+        <line x1={510} y1={140} x2={520} y2={195} stroke="#ddd8d0" strokeWidth={1} strokeDasharray="4,3" />
+        <line x1={640} y1={140} x2={520} y2={195} stroke="#ddd8d0" strokeWidth={1} strokeDasharray="4,3" />
+
+        <line x1={120} y1={165} x2={640} y2={165} stroke="#b5ad9e" strokeWidth={1.5} />
+        {agents.map((a, i) => (
+          <circle key={`dot${i}`} cx={a.x + 40} cy={165} r={3} fill="#b5ad9e" />
+        ))}
+
+        {externalTop.map((ext, i) => (
+          <g key={`ext${i}`}>
+            <rect x={ext.x} y={ext.y} width={80} height={24} rx={4} fill={ext.label === "Hostaway" ? ACCENT_LIGHT : "none"} stroke={ext.color} strokeWidth={ext.label === "Hostaway" ? 2 : 1} opacity={ext.label === "Hostaway" ? 1 : 0.5} />
+            <text x={ext.x + 40} y={ext.y + 16} textAnchor="middle" fontSize={9} fontFamily="system-ui, sans-serif" fill={ext.color} fontWeight={ext.label === "Hostaway" ? 700 : 500}>{ext.label}</text>
+          </g>
+        ))}
+
+        {agents.map((a, i) => (
+          <g key={`a${i}`}>
+            <rect x={a.x} y={a.y} width={a.w} height={a.h} rx={6} fill={a.color} opacity={0.1} stroke={a.color} strokeWidth={1.5} />
+            {a.label.split("\n").map((line, li) => (
+              <text key={li} x={a.x + a.w / 2} y={a.y + 22 + li * 14} textAnchor="middle" fontSize={10} fontFamily="system-ui, sans-serif" fill={a.color} fontWeight={600}>{line}</text>
+            ))}
+          </g>
+        ))}
+
+        {bottom.map((b, i) => (
+          <g key={`b${i}`}>
+            <rect x={b.x} y={b.y} width={b.label.includes("Google") ? 140 : 120} height={b.label.includes("Google") ? 36 : 28} rx={4} fill={b.label.includes("Pricing") ? ACCENT_LIGHT : "#f3f0eb"} stroke={b.label.includes("Pricing") ? ACCENT + "44" : "#ddd8d0"} strokeWidth={1} />
+            {b.label.split("\n").map((line, li) => (
+              <text key={li} x={b.x + (b.label.includes("Google") ? 70 : 60)} y={b.y + 16 + li * 13} textAnchor="middle" fontSize={9} fontFamily="system-ui, sans-serif" fill={b.label.includes("Pricing") ? ACCENT : "#5a5550"} fontWeight={b.label.includes("Pricing") ? 600 : 500}>{line}</text>
+            ))}
+          </g>
+        ))}
+
+        <text x={380} y={172} textAnchor="middle" fontSize={8} fontFamily="system-ui, sans-serif" fill="#b5ad9e" letterSpacing={1}>INTER-AGENT BUS</text>
+      </svg>
+    </div>
+  );
+}
+
+// ─── Main Component ─────────────────────────────────────────────────────────
+
+function Portfolio() {
+  const [loaded, setLoaded] = useState(false);
+  const [statsInView, setStatsInView] = useState(false);
+  const [activeNav, setActiveNav] = useState("");
+  const statsRef = useRef(null);
+
+  useEffect(() => { setTimeout(() => setLoaded(true), 100); }, []);
+
+  useEffect(() => {
+    const el = statsRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setStatsInView(true); obs.disconnect(); } }, { threshold: 0.3 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const els = NAV_SECTIONS.map(s => document.getElementById(s.id)).filter(Boolean);
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) setActiveNav(e.target.id); });
+    }, { threshold: 0.2, rootMargin: "-60px 0px -60% 0px" });
+    els.forEach(el => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
+  const scrollTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const sf = "system-ui, -apple-system, sans-serif";
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#FAFAF8", fontFamily: "'Georgia', 'Times New Roman', serif", color: "#1a1a1a" }}>
+
+      {/* Sticky Nav */}
+      <nav style={{
+        position: "sticky", top: 0, zIndex: 100,
+        background: "rgba(250,250,248,0.92)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+        borderBottom: "1px solid #e8e5e0",
+        padding: "0 24px",
+        opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease 0.3s",
+      }}>
+        <div style={{ maxWidth: 800, margin: "0 auto", display: "flex", gap: 0, overflowX: "auto", scrollbarWidth: "none" }}>
+          {NAV_SECTIONS.map(s => (
+            <button
+              key={s.id}
+              onClick={() => scrollTo(s.id)}
+              style={{
+                background: "none", border: "none", cursor: "pointer",
+                padding: "14px 14px 12px",
+                fontSize: 11, fontFamily: sf, letterSpacing: "1px", textTransform: "uppercase",
+                color: activeNav === s.id ? ACCENT : "#a09a92",
+                borderBottom: activeNav === s.id ? `2px solid ${ACCENT}` : "2px solid transparent",
+                transition: "all 0.2s", whiteSpace: "nowrap",
+                fontWeight: activeNav === s.id ? 600 : 400,
+              }}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+      </nav>
+
+      {/* Application badge */}
+      <div style={{
+        background: ACCENT_LIGHT, borderBottom: `1px solid ${ACCENT}22`,
+        padding: "10px 24px", textAlign: "center",
+        opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease 0.2s",
+      }}>
+        <span style={{ fontSize: 12, fontFamily: sf, color: ACCENT, letterSpacing: "1px", fontWeight: 500 }}>
+          APPLICATION · INTERNAL AI TOOLS SPECIALIST (EMEA) · HOSTAWAY
+        </span>
+      </div>
+
+      {/* Header */}
+      <div style={{
+        padding: "48px 0 40px", textAlign: "center",
+        opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(-10px)", transition: "all 0.6s ease",
+      }}>
+        <h1 style={{ fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 400, letterSpacing: "-0.5px", margin: "0 0 8px" }}>
+          Harry Beaumont
+        </h1>
+        <p style={{ fontSize: "clamp(14px, 2vw, 17px)", color: "#6b6560", margin: "0 0 20px", fontStyle: "italic", letterSpacing: "0.3px" }}>
+          Internal AI Tools Builder · Hostaway API Integrator · Production AI Systems
+        </p>
+        <div style={{ display: "flex", gap: 24, justifyContent: "center", flexWrap: "wrap", fontSize: 14, padding: "0 20px" }}>
+          <a href="https://github.com/h1beaumont" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "none", borderBottom: `1px solid ${ACCENT}44`, paddingBottom: 2 }}>github.com/h1beaumont</a>
+          <a href="https://ops.keystays.uk" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "none", borderBottom: `1px solid ${ACCENT}44`, paddingBottom: 2 }}>ops.keystays.uk ↗</a>
+          <a href="https://pricing.keystays.co.uk" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "none", borderBottom: `1px solid ${ACCENT}44`, paddingBottom: 2 }}>pricing.keystays.co.uk ↗</a>
+          <span style={{ color: "#a09a92" }}>Nottingham, UK · Remote</span>
+        </div>
+      </div>
+
+      {/* Intro */}
+      <div style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px", opacity: loaded ? 1 : 0, transition: "opacity 0.6s ease 0.2s" }}>
+        <p style={{ fontSize: "clamp(15px, 2vw, 17px)", lineHeight: 1.75, color: "#3d3832", margin: 0 }}>
+          For the past three years I've been a Hostaway power user and API integrator — managing 68 live properties
+          through the platform while building a stack of internal AI tools on top of it. My dynamic pricing engine
+          calls the Hostaway API every day to push rates across all 68 listings. My Communications Agent pulls
+          real-time reservation context from Hostaway to draft guest responses. My Onboarding Agent pushes new
+          properties into Hostaway as part of an 11-stage automated pipeline. I know this platform from the operator
+          side in depth — and I've spent seven years building the exact thing this role requires: internal AI tools
+          that make operations faster, smarter, and more reliable.
+        </p>
+      </div>
+
+      {/* Stats */}
+      <div ref={statsRef} style={{ maxWidth: 800, margin: "40px auto 0", padding: "0 24px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 8, padding: "28px 0", borderTop: "1px solid #e8e5e0", borderBottom: "1px solid #e8e5e0" }}>
+          {STATS.map((s, i) => <StatCard key={i} stat={s} index={i} inView={statsInView} />)}
+        </div>
+      </div>
+
+      <div style={{ maxWidth: 800, margin: "0 auto", padding: "48px 24px 0" }}>
+
+        {/* Timeline */}
+        <Reveal>
+          <SectionHeading id="timeline">Timeline</SectionHeading>
+        </Reveal>
+        <div style={{ position: "relative", paddingLeft: 28, marginBottom: 56 }}>
+          <div style={{ position: "absolute", left: 6, top: 4, bottom: 4, width: 1, background: "#ddd8d0" }} />
+          {TIMELINE.map((item, idx) => (
+            <Reveal key={idx} delay={idx * 0.06}>
+              <div style={{ position: "relative", marginBottom: idx === TIMELINE.length - 1 ? 0 : 28 }}>
+                <div style={{ position: "absolute", left: -28, top: 5, width: 13, height: 13, borderRadius: "50%", background: item.type === "hostaway" ? ACCENT : item.type === "founded" ? "#8b7355" : "#FAFAF8", border: item.type === "hostaway" ? `2px solid ${ACCENT}` : item.type === "founded" ? "2px solid #8b7355" : "2px solid #b5ad9e" }} />
+                <div style={{ fontSize: 12, fontFamily: sf, color: item.type === "hostaway" ? ACCENT : "#8b7355", letterSpacing: "1px", marginBottom: 4, fontWeight: 600 }}>{item.year}</div>
+                <div style={{ fontSize: "clamp(15px, 2vw, 17px)", fontWeight: 400, color: "#1a1a1a", marginBottom: 4 }}>{item.title}</div>
+                <div style={{ fontSize: "clamp(13px, 1.8vw, 14.5px)", lineHeight: 1.65, color: "#5a5550" }}>{item.detail}</div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Architecture */}
+        <Reveal>
+          <SectionHeading id="architecture">Internal AI System Architecture</SectionHeading>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <div style={{ padding: "24px 16px", background: "#FEFDFB", border: "1px solid #ece9e3", borderRadius: 8, marginBottom: 56 }}>
+            <ArchitectureDiagram />
+            <p style={{ fontSize: 12, fontFamily: sf, color: "#9b9389", textAlign: "center", margin: "12px 0 0", fontStyle: "italic" }}>
+              5 autonomous agents communicating via inter-agent bus — Hostaway API is the central data source, called daily by the pricing engine and in real-time by the comms agent
+            </p>
+          </div>
+        </Reveal>
+
+        {/* Agents */}
+        <Reveal>
+          <SectionHeading id="agents">The 5-Agent Internal AI Stack</SectionHeading>
+        </Reveal>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 56 }}>
+          {AGENTS.map((a, i) => (
+            <Reveal key={i} delay={i * 0.06}>
+              <ExpandableCard item={a} accentColor={ACCENT} />
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Tools */}
+        <Reveal>
+          <SectionHeading id="tools">Internal Tools Built</SectionHeading>
+        </Reveal>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 56 }}>
+          {TOOLS.map((t, i) => (
+            <Reveal key={i} delay={i * 0.06}>
+              <ExpandableCard item={t} accentColor={ACCENT} />
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Hostaway Section */}
+        <Reveal>
+          <SectionHeading id="hostaway" accent={true}>Hostaway — What I Know From the Inside</SectionHeading>
+        </Reveal>
+        <Reveal delay={0.05}>
+          <div style={{ padding: "20px 24px", background: ACCENT_LIGHT, border: `1px solid ${ACCENT}22`, borderRadius: 8, marginBottom: 20, display: "flex", alignItems: "flex-start", gap: 16 }}>
+            <div style={{ fontSize: 28, flexShrink: 0, marginTop: 2 }}>🏠</div>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 500, color: ACCENT, marginBottom: 4, fontFamily: sf }}>Currently managing 68 live properties via Hostaway</div>
+              <p style={{ fontSize: 13.5, lineHeight: 1.65, color: "#4a4560", margin: 0, fontFamily: sf }}>
+                I'm not a candidate who has heard of Hostaway. I'm an active operator using the platform daily — bookings, messaging, owner payouts, rate management. I know where the product works brilliantly and I know where operators hit friction. That operator-side context is directly useful when building internal AI tools for Hostaway teams.
+              </p>
+            </div>
+          </div>
+        </Reveal>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 56 }}>
+          {HOSTAWAY_DEPTH.map((item, i) => (
+            <Reveal key={i} delay={i * 0.06}>
+              <ExpandableCard item={item} accentColor={ACCENT} />
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Integration Ecosystem */}
+        <Reveal>
+          <div style={{ marginBottom: 32 }}>
+            <div style={{ fontSize: 12, fontFamily: sf, textTransform: "uppercase", letterSpacing: "1.5px", color: "#b5ad9e", marginBottom: 12, fontWeight: 500 }}>Integration Ecosystem</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {INTEGRATIONS.map((int, i) => {
+                const c = INTEGRATION_COLORS[int.category];
+                return (
+                  <span key={i} style={{
+                    fontSize: 13, fontFamily: sf, fontWeight: int.category === "core" ? 600 : 500,
+                    padding: "7px 16px", borderRadius: 20,
+                    background: c.bg, color: c.color,
+                    border: `1px solid ${c.color}22`,
+                    letterSpacing: "0.2px",
+                  }}>
+                    {int.name}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        </Reveal>
+
+        {/* AI Practice */}
+        <Reveal>
+          <SectionHeading id="ai-practice">AI Practice & Methodology</SectionHeading>
+        </Reveal>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 56 }}>
+          {AI_PRACTICE.map((item, idx) => (
+            <Reveal key={idx} delay={idx * 0.06}>
+              <ExpandableCard item={item} accentColor={ACCENT} />
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Lessons */}
+        <Reveal>
+          <SectionHeading id="lessons">Lessons from Shipping AI in Production</SectionHeading>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <div style={{ padding: "32px", background: "#FEFDFB", border: "1px solid #ece9e3", borderRadius: 8, marginBottom: 56 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              {LESSONS.map((lesson, i) => (
+                <div key={i} style={{ paddingLeft: 16, borderLeft: `2px solid ${i === 0 ? ACCENT : "#e8e5e0"}` }}>
+                  <div style={{ fontSize: "clamp(14px, 2vw, 16px)", fontWeight: 500, color: "#1a1a1a", marginBottom: 4 }}>{lesson.title}</div>
+                  <p style={{ fontSize: "clamp(12px, 1.6vw, 14px)", lineHeight: 1.65, color: "#5a5550", margin: 0 }}>{lesson.detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+
+        {/* Why Hostaway */}
+        <Reveal>
+          <SectionHeading id="why-hostaway" accent={true}>Why Hostaway — Why This Role</SectionHeading>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <div style={{ padding: "36px", background: "#FEFDFB", border: `1px solid ${ACCENT}22`, borderRadius: 8, marginBottom: 56 }}>
+            <p style={{ fontSize: "clamp(15px, 2vw, 17px)", lineHeight: 1.8, color: "#3d3832", margin: "0 0 20px" }}>
+              I didn't find this role through a job board and think "that sounds interesting." I've been a Hostaway customer for years. I've built my entire operational stack on top of your API. I call your endpoints every morning at 6am. When I saw the Internal AI Tools Specialist role, the alignment was immediate — I've been doing a version of this job for myself.
+            </p>
+            <p style={{ fontSize: "clamp(15px, 2vw, 17px)", lineHeight: 1.8, color: "#3d3832", margin: "0 0 20px" }}>
+              Building internal AI tools for a company means understanding both the technical surface area (what's possible with the APIs, data, and AI models) and the operational reality (what the teams actually need, where manual workflows are creating friction, which decisions are worth automating). I have both. I've been the operator and the builder simultaneously.
+            </p>
+            <p style={{ fontSize: "clamp(15px, 2vw, 17px)", lineHeight: 1.8, color: "#3d3832", margin: "0 0 20px" }}>
+              Hostaway is building tools for operators like me — and now I want to help build the tools your team uses internally. That's a full-circle application I can make with genuine conviction.
+            </p>
+            <div style={{ padding: "20px 24px", background: ACCENT_LIGHT, borderRadius: 6, marginTop: 8 }}>
+              <p style={{ fontSize: 14, lineHeight: 1.7, color: ACCENT, margin: 0, fontFamily: sf, fontWeight: 500 }}>
+                Based in Nottingham, UK · Available immediately · Happy to talk — harrybeaumont0@gmail.com
+              </p>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+
+      {/* Footer */}
+      <div style={{ maxWidth: 800, margin: "0 auto", padding: "0 24px 80px" }}>
+        <Reveal>
+          <div style={{ textAlign: "center", padding: "40px 0 0", borderTop: "1px solid #e8e5e0" }}>
+            <p style={{ fontSize: 14, color: "#9b9389", fontStyle: "italic", margin: "0 0 12px", lineHeight: 1.6 }}>
+              Applying for: Internal AI Tools Specialist (EMEA) · Hostaway · Remote · March 2026
+            </p>
+            <p style={{ fontSize: 12, color: "#b5ad9e", margin: 0 }}>
+              harrybeaumont0@gmail.com · <a href="https://github.com/h1beaumont" target="_blank" rel="noopener noreferrer" style={{ color: "#b5ad9e", textDecoration: "none" }}>github.com/h1beaumont</a>
+            </p>
+          </div>
+        </Reveal>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Portfolio />);
+</script>
+</body>
+</html>
