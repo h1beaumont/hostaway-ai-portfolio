@@ -33,7 +33,7 @@ const STATS = [
   { label: "Active Properties via Hostaway", value: 68, suffix: "" },
   { label: "API Endpoints Built", value: 600, suffix: "+" },
   { label: "Automation Scripts", value: 85, suffix: "+" },
-  { label: "Years Shipping AI Systems", value: 7, suffix: "+" },
+  { label: "Years Building & Operating at Scale", value: 7, suffix: "+" },
 ];
 
 const NAV_SECTIONS = [
@@ -100,7 +100,7 @@ const AGENTS = [
 
 const TOOLS = [
   { title: "KeyStays Ops Dashboard", url: "https://ops.keystays.uk", description: "Next.js operations dashboard (221 commits, 216 deployments). Real-time visibility across 8 operational queues: draft responses, escalations, complaints, unpaid deposits, fulfillment orders, pending extensions, cleanliness issues, and maintenance requests. Every action syncs back to Google Sheets as the source of truth. Built to replace Hostaway's native view for operators who need custom workflow management on top of the PMS data layer.", tags: ["Next.js", "221 Commits", "8 Queues", "Vercel", "Hostaway Data Layer"], activity: "221 commits · Live in production" },
-  { title: "Dynamic Pricing Engine", url: "https://pricing.keystays.co.uk", description: "Flask-based pricing engine connected to the Hostaway API managing rates across 68 live properties. Real-time financials, local event-based pricing boosts, competitor rate monitoring, per-property overrides, and automated daily rate pushes at 6am. Directly interacts with Hostaway's rate management endpoints every single day.", tags: ["Python/Flask", "Hostaway API", "68 Properties", "Revenue Management", "Daily Rate Push"] },
+  { title: "Dynamic Pricing Engine", url: "https://ops.keystays.uk/pricing", description: "Flask-based pricing engine connected to the Hostaway API managing rates across 68 live properties. Real-time financials, local event-based pricing boosts, competitor rate monitoring, per-property overrides, and automated daily rate pushes at 6am. Directly interacts with Hostaway's rate management endpoints every single day.", tags: ["Python/Flask", "Hostaway API", "68 Properties", "Revenue Management", "Daily Rate Push"] },
   { title: "Guest Feedback Kiosk App", description: "Branded tablet kiosk for in-property guest feedback. React-based with star ratings across 6 categories, auto-reset between guests, and Google Sheets webhook integration. Deployed on Amazon Fire tablets in kiosk mode across the portfolio.", tags: ["React", "Google Sheets API", "IoT/Tablets"] },
   { title: "Custom Platform & Infrastructure", description: "Bespoke platform with 600+ API endpoints handling the full operational lifecycle. Cloudflare Workers for edge logic, headless Mac Mini M4 with Tailscale running scraping and automation tasks, and automated owner statement generation with revenue breakdowns, fee reconciliation, and maintenance deductions.", tags: ["600+ Endpoints", "Cloudflare Workers", "Mac Mini M4", "Tailscale"] },
 ];
@@ -416,7 +416,8 @@ function Portfolio() {
         <div style={{ display: "flex", gap: 24, justifyContent: "center", flexWrap: "wrap", fontSize: 14, padding: "0 20px" }}>
           <a href="https://github.com/h1beaumont" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "none", borderBottom: `1px solid ${ACCENT}44`, paddingBottom: 2 }}>github.com/h1beaumont</a>
           <a href="https://ops.keystays.uk" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "none", borderBottom: `1px solid ${ACCENT}44`, paddingBottom: 2 }}>ops.keystays.uk ↗</a>
-          <a href="https://pricing.keystays.co.uk" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "none", borderBottom: `1px solid ${ACCENT}44`, paddingBottom: 2 }}>pricing.keystays.co.uk ↗</a>
+          <a href="https://keystays.co.uk" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "none", borderBottom: `1px solid ${ACCENT}44`, paddingBottom: 2 }}>keystays.co.uk ↗</a>
+          <a href="https://midlandsdigital.ai" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "none", borderBottom: `1px solid ${ACCENT}44`, paddingBottom: 2 }}>midlandsdigital.ai ↗</a>
           <span style={{ color: "#a09a92" }}>Nottingham, UK · Remote</span>
         </div>
       </div>
